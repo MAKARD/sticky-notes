@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-import { CreateStickyNote, GetStickyNotes, UpdateStickyNote } from '@/domain/apis/sticky-notes.api';
+import { CreateStickyNote, DeleteStickyNote, GetStickyNotes, UpdateStickyNote } from '@/domain/apis/sticky-notes.api';
 import { APIService } from '@/infrastructure/services/HTTPService';
 import { StickyNote } from '@/domain/models/StickyNote.model';
 
@@ -15,9 +15,13 @@ const updateNote = APIService
 const createNote = APIService
   .createRequest<CreateStickyNote.ResponseDTO, CreateStickyNote.RequestDTO, {}>(CreateStickyNote.api);
 
+const deleteNote = APIService
+  .createRequest<DeleteStickyNote.ResponseDTO, DeleteStickyNote.RequestDTO, DeleteStickyNote.QueryDTO>(DeleteStickyNote.api);
+
 interface StickyNotesStore {
   items: Array<StickyNote>
   fetchNotes(): Promise<void>;
+  deleteNoteById(id: string): Promise<void>
   changeNoteById(id: string, payload: Partial<Omit<StickyNote, 'id'>>): Promise<void>
   createNote(payload: Omit<StickyNote, 'id'>): Promise<void>
 }
@@ -66,6 +70,27 @@ export const useStickyNotes = create<StickyNotesStore>()(
           console.log(error)
         }
       },
+      deleteNoteById: async (id) => {
+        const prevItems = getState().items
+
+        try {
+          set((state) => ({
+            ...state,
+            items: state.items.filter((item) => item.id !== id)
+          }))
+
+          await deleteNote({
+            queryParams: {
+              id
+            }
+          })
+        } catch (error) {
+          set({
+            items: prevItems
+          })
+          console.error(error)
+        }
+      },
       changeNoteById: async (id, payload) => {
         const note = getState().items.find((item) => item.id === id)
 
@@ -108,8 +133,6 @@ export const useStickyNotes = create<StickyNotesStore>()(
       },
       fetchNotes: async () => {
         const { stickyNotes } = await getNotes({});
-
-        console.log("stickyNotes", stickyNotes)
 
         set({
           items: stickyNotes

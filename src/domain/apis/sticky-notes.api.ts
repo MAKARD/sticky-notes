@@ -27,6 +27,21 @@ export namespace UpdateStickyNote {
   export type RequestDTO = Partial<Omit<StickyNote, 'id'>>
 }
 
+export namespace DeleteStickyNote {
+  export const api: API = {
+    method: 'DELETE',
+    path: '/v1/sticky-note'
+  };
+
+  export type QueryDTO = {
+    id: string;
+  };
+
+  export type ResponseDTO = {}
+
+  export type RequestDTO = {}
+}
+
 export namespace CreateStickyNote {
   export const api: API = {
     method: 'POST',

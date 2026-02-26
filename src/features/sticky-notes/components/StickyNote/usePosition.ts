@@ -1,16 +1,17 @@
 import React, { useEffect, useEffectEvent } from "react";
 
 interface Position {
-    x: number;
-    y: number
+  x: number;
+  y: number
 }
 
 interface Params {
-    onCommitChange: (position: Position) => void
-    initialPosition: Position
+  onCommitChange: (position: Position) => void
+  onChange: (position: Position) => void
+  initialPosition: Position
 }
 
-export const usePosition = ({ onCommitChange, initialPosition }: Params) => {
+export const usePosition = ({ onCommitChange, initialPosition, onChange }: Params) => {
   const [localPosition, setLocalPosition] = React.useState(initialPosition);
   const [startPosition, setStartPosition] = React.useState<Position | null>(null);
 
@@ -24,10 +25,18 @@ export const usePosition = ({ onCommitChange, initialPosition }: Params) => {
     const dx = moveEvent.clientX - startPosition.x;
     const dy = moveEvent.clientY - startPosition.y;
 
-    setLocalPosition(prev => ({
-      x: prev.x + dx,
-      y: prev.y + dy,
-    }));
+    
+
+    setLocalPosition(prev => {
+      const nextPosition = {
+        x: prev.x + dx,
+        y: prev.y + dy,
+      }
+
+      onChange(nextPosition)
+
+      return nextPosition
+    });
 
     setStartPosition({ x: moveEvent.clientX, y: moveEvent.clientY });
   });

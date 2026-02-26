@@ -5,13 +5,17 @@ import { useStickyNotes } from "../../stores";
 import { usePosition } from "./usePosition";
 import { useResize } from "./useResize";
 import { useText } from "./useText";
+import { useOverlapping } from "./useDelete";
 
 interface Props {
     stickyNote: StickyNoteModel
 }
 
 export const StickyNote: React.FC<Props> = ({ stickyNote }) => {
-    const { changeNoteById } = useStickyNotes();
+    const { changeNoteById, deleteNoteById } = useStickyNotes();
+    const OverlappingToDeleteZone = useOverlapping({
+        targetElementId: 'sticky-notes-delete-zone'
+    })
 
     const Text = useText({
         initialText: stickyNote.text,
@@ -22,7 +26,16 @@ export const StickyNote: React.FC<Props> = ({ stickyNote }) => {
 
     const Position = usePosition({
         initialPosition: stickyNote.position,
+        onChange: () => {
+            OverlappingToDeleteZone.checkOverlapping()
+        },
         onCommitChange: (position) => {
+            if (OverlappingToDeleteZone.isOverlapping) {
+                deleteNoteById(stickyNote.id)
+
+                return
+            }
+
             changeNoteById(stickyNote.id, { position })
         }
     })
@@ -36,6 +49,7 @@ export const StickyNote: React.FC<Props> = ({ stickyNote }) => {
 
     return (
         <div
+            ref={OverlappingToDeleteZone.elementRef}
             onMouseDown={Position.onMouseDown}
             className="
         absolute 

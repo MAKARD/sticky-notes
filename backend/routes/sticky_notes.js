@@ -57,4 +57,22 @@ router.post('/', function (req, res) {
   res.status(201).json(newNote);
 });
 
+router.delete('/', function (req, res) {
+  const { id } = req.query;
+
+  if (!id) {
+    return res.status(400).json({ message: 'id is required in query' });
+  }
+
+  const existingNote = inMemoryNotes.get(id);
+  
+  if (!existingNote) {
+    return res.status(404).json({ message: 'Sticky note not found' });
+  }
+
+  inMemoryNotes.delete(id);
+
+  res.status(200).json({});
+})
+
 module.exports = router;
