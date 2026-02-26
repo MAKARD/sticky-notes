@@ -24,6 +24,7 @@
   },
   "scripts": {
     "start": "craco start",
+    "start:backend": "cd backend && npm start",
     "build": "craco build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

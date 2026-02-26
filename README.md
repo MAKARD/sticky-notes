@@ -1,46 +1,43 @@
-# Getting Started with Create React App
+# Sticky notes mini app
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Boilerplated from CRA.
 
-## Available Scripts
+## How to run
 
-In the project directory, you can run:
+You will need 2 terminals.
 
-### `npm start`
+In tje first terminal run
+```sh
+npm run start:backend
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+In the second terminal run
+```sh
+npm start
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## How to interact with the app
 
-### `npm test`
+Press `+` to add a new sticky note. 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+You can drag it all over the screen. When you drag it over `trash` zone, upon pressing out the note will be deleted. You will see visual indicator suggesting the item is going to be deleted over the `trash` zone.
 
-### `npm run build`
+You can edit the text as necessary.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+By pressing on `arrow` icon, the given note will bring forward over all other notes.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Architecture
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The app is build by leveraging feature/domain-driven development.
 
-### `npm run eject`
+The application consists of 5 namespaces:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- app: assembles all the building blocks into an actual app
+- domain: declares all the communication channels and entities of the system
+- features: implements features of the application
+- infrastructure: glues different parts of the system
+- ui: declares all the ui-only related modules
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Backend
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+The backend is located in the root of the project. It's a basic express app with in-memory sticky notes storage. That means the storage is emptying every time you stop the service.
