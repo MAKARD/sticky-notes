@@ -25,8 +25,6 @@ export const usePosition = ({ onCommitChange, initialPosition, onChange }: Param
     const dx = moveEvent.clientX - startPosition.x;
     const dy = moveEvent.clientY - startPosition.y;
 
-    
-
     setLocalPosition(prev => {
       const nextPosition = {
         x: prev.x + dx,
@@ -43,6 +41,8 @@ export const usePosition = ({ onCommitChange, initialPosition, onChange }: Param
 
   const onMouseUp = useEffectEvent(() => {
     if (!startPosition) return;
+
+    if (localPosition.x === initialPosition.x && localPosition.y === initialPosition.y) return
 
     onCommitChange(localPosition);
     setStartPosition(null);

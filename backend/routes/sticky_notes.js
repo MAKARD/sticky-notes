@@ -30,6 +30,10 @@ router.patch('/', function (req, res) {
     id
   };
 
+  if (req.body.zIndex) {
+    // some normalize logic
+  }
+
   inMemoryNotes.set(id, updatedNote);
 
   res.json({});

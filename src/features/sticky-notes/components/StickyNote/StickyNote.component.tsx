@@ -1,18 +1,24 @@
 import React from "react";
 
+import { ArrowUpIcon } from "@heroicons/react/24/solid";
+
+
 import { StickyNote as StickyNoteModel } from "@/domain/models/StickyNote.model";
 import { useStickyNotes } from "../../stores";
 import { usePosition } from "./usePosition";
 import { useResize } from "./useResize";
 import { useText } from "./useText";
 import { useOverlapping } from "./useDelete";
+import { useZIndex } from "./useZIndex";
+import { Button } from "@/ui/Button";
 
 interface Props {
     stickyNote: StickyNoteModel
 }
 
 export const StickyNote: React.FC<Props> = ({ stickyNote }) => {
-    const { changeNoteById, deleteNoteById } = useStickyNotes();
+    const { changeNoteById, deleteNoteById, items } = useStickyNotes();
+
     const OverlappingToDeleteZone = useOverlapping({
         targetElementId: 'sticky-notes-delete-zone'
     })
@@ -47,6 +53,13 @@ export const StickyNote: React.FC<Props> = ({ stickyNote }) => {
         }
     })
 
+    const ZIndex = useZIndex({
+        initialZIndex: stickyNote.zIndex,
+        onCommitChange: (zIndex) => {
+            changeNoteById(stickyNote.id, { zIndex })
+        }
+    })
+
     return (
         <div
             ref={OverlappingToDeleteZone.elementRef}
@@ -70,6 +83,7 @@ export const StickyNote: React.FC<Props> = ({ stickyNote }) => {
                 width: Size.currentSize.width,
                 height: Size.currentSize.height,
                 backgroundColor: stickyNote.color,
+                zIndex: ZIndex.currentZIndex,
             }}
         >
             <textarea
@@ -78,7 +92,14 @@ export const StickyNote: React.FC<Props> = ({ stickyNote }) => {
                 onChange={Text.onTextChange}
                 onBlur={Text.onBlur}
             />
-
+            <Button
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={ZIndex.bringForward}
+                variant="contained"
+                className="absolute bottom-1 left-1 w-5 h-5"
+            >
+                <ArrowUpIcon className="w-5 h-5 color-gray-700" />
+            </Button>
             <div
                 onMouseDown={Size.onMouseDown}
                 className="

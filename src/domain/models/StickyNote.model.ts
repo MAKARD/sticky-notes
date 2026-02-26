@@ -10,4 +10,5 @@ export interface StickyNote {
         y: number
     }
     color: string
+    zIndex: number
 }
