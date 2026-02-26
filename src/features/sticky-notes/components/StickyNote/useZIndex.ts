@@ -11,7 +11,7 @@ export const useZIndex = ({initialZIndex, onCommitChange}: Params) => {
     const {items} = useStickyNotes()
 
     const bringForward = () => {
-        const currentMaxZIndex = Math.max(...items.map(({zIndex}) => zIndex))
+        const currentMaxZIndex = Math.max(...items.map(({zIndex}) => zIndex || 0))
 
         if (localZIndex === currentMaxZIndex) return
 

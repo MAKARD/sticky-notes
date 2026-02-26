@@ -132,11 +132,15 @@ export const useStickyNotes = create<StickyNotesStore>()(
         }
       },
       fetchNotes: async () => {
-        const { stickyNotes } = await getNotes({});
+        try {
+          const { stickyNotes } = await getNotes({});
 
-        set({
-          items: stickyNotes
-        });
+          set({
+            items: stickyNotes
+          });
+        } catch (error) {
+          console.error(error)
+        }
       },
     })),
     {

@@ -11,7 +11,7 @@ var app = express();
 const cors = require('cors');
 
 app.use(cors({
-  origin: 'http://localhost:3001'
+  origin: '*'
 }));
 
 app.use(logger('dev'));
